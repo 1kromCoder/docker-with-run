@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateAuthorDto } from './dto/create-author.dto';
 import { UpdateAuthorDto } from './dto/update-author.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -11,7 +11,9 @@ export class AuthorService {
       const post = await this.prisma.author.create({ data });
       return post;
     } catch (error) {
-      throw new Error(`Failed to create author: ${error.message}`);
+      throw new BadRequestException(
+        `Failed to create author: ${error.message}`,
+      );
     }
   }
 
@@ -43,17 +45,17 @@ export class AuthorService {
 
       return authors;
     } catch (error) {
-      throw new Error(`Failed to get authors: ${error.message}`);
+      throw new BadRequestException(`Failed to get authors: ${error.message}`);
     }
   }
 
   async findOne(id: number) {
     try {
       const author = await this.prisma.author.findFirst({ where: { id } });
-      if (!author) throw new Error('Author not found');
+      if (!author) throw new BadRequestException('Author not found');
       return author;
     } catch (error) {
-      throw new Error(`Failed to get author: ${error.message}`);
+      throw new BadRequestException(`Failed to get author: ${error.message}`);
     }
   }
 
@@ -62,7 +64,9 @@ export class AuthorService {
       const updated = await this.prisma.author.update({ where: { id }, data });
       return updated;
     } catch (error) {
-      throw new Error(`Failed to update author: ${error.message}`);
+      throw new BadRequestException(
+        `Failed to update author: ${error.message}`,
+      );
     }
   }
 
@@ -70,7 +74,9 @@ export class AuthorService {
     try {
       return await this.prisma.author.delete({ where: { id } });
     } catch (error) {
-      throw new Error(`Failed to delete author: ${error.message}`);
+      throw new BadRequestException(
+        `Failed to delete author: ${error.message}`,
+      );
     }
   }
 }
